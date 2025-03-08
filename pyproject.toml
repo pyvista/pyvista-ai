@@ -1,0 +1,21 @@
+[tool.ruff]
+line-length = 150
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+ignore = ["COM812", "D203", "D212", "ISC001"]
+select = ["ALL"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-single-line = true
+force-sort-within-sections = true
+required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.lint.per-file-ignores]
+"examples/**" = ["D205", "D400", "D415", "INP001", "T201"]
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
