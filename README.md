@@ -17,27 +17,24 @@ pip install pyvista-ai
 
 ### Basic Example
 ```python
+import asyncio
 import pyvista as pv
-from pyvista_ai import AIPlotter, PlotterConfig
+from pyvista_ai import PlotterAgent
 
-# Initial configuration
-config = PlotterConfig()
-plotter = AIPlotter(config)
+agent = PlotterAgent(model="gemini:pro")
 
-# Modify settings using AI
-plotter.configure_from_ai("Enhance realistic shading and display in widescreen mode")
+async def main() -> None:
+    plotter = await agent.run("Enhance realistic shading and display in widescreen mode")
+    return plotter.show()
 
-# Add a mesh and display it
-mesh = pv.Sphere()
-plotter.add_mesh(mesh, color="blue")
-plotter.show()
+asyncio.run(main())
 ```
 
 ## Required Environment Variables
-To use `pyvista-ai`, you need to set the OpenAI API key as an environment variable.
+To use `pyvista-ai`, you need to set the GEMINI API key as an environment variable.
 
 ```bash
-export OPENAI_API_KEY="your-api-key-here"
+export GEMINI_API_KEY="your-api-key-here"
 ```
 
 ## Future Plans
