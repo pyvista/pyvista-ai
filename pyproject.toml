@@ -1,14 +1,12 @@
 [build-system]
 build-backend = 'setuptools.build_meta'
 requires = [
-  'google-generativeai',
   'pydantic-ai[all]<0.0.37',
   'pyvista[all]<0.44.2',
 ]
 
 [project]
 dependencies = [
-  'google-generativeai',
   'pydantic-ai[all]<0.0.37',
   'pyvista[all]<0.44.2',
 ]
