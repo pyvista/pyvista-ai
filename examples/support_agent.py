@@ -48,6 +48,7 @@ class SupportAgent(Agent[SupportDependencies, SupportResult]):
             system_prompt=self.default_system_prompt(),
         )
         self.system_prompt(self.add_customer_name)
+        self.tool(self.customer_balance)
 
     @staticmethod
     def default_system_prompt() -> str:
@@ -61,7 +62,6 @@ class SupportAgent(Agent[SupportDependencies, SupportResult]):
         return f"The customer's name is {customer['name']!r}"
 
     @staticmethod
-    @Agent.tool
     async def customer_balance(ctx: RunContext[SupportDependencies]) -> float:
         """Return the customer's current account balance"""
         customer = CUSTOMER_DATABASE.get(ctx.deps.customer_id, {"balance": 0.0})
