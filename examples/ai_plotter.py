@@ -1,5 +1,14 @@
+r"""
+PyVista Plotter with AI-based configuration
+-------------------------------------------
+
+This example demonstrates how to create a PyVista Plotter with AI-based configuration.
+
+"""
+
 from __future__ import annotations
 
+import json
 import os
 
 import openai
@@ -22,13 +31,14 @@ class PlotterConfig(BaseModel):
 class AIPlotter(pv.Plotter):
     """PyVista Plotter class that allows AI-based configuration"""
 
-    def __init__(self, config: PlotterConfig):
+    def __init__(self, config: PlotterConfig) -> None:
+        """Initialize the Plotter with the given configuration"""
         super().__init__()
         self.background_color = config.background_color
         self.window_size = config.window_size
         self.lighting = config.lighting
 
-    def configure_from_ai(self, prompt: str):
+    def configure_from_ai(self, prompt: str) -> None:
         """Interpret the prompt using an AI model and modify the settings accordingly"""
         response = openai.ChatCompletion.create(
             model="gpt-4",
@@ -43,7 +53,7 @@ class AIPlotter(pv.Plotter):
 
         # Apply the parsed result (attempting to convert to JSON format)
         try:
-            config_dict = eval(ai_suggestion)  # Treat AI output as a dictionary (json.loads is recommended in production)
+            config_dict = json.loads(ai_suggestion)
             config = PlotterConfig(**config_dict)
             self.background_color = config.background_color
             self.window_size = config.window_size
