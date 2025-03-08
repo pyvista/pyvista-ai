@@ -1,19 +1,27 @@
+from __future__ import annotations
+
 import os
+
 import openai
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
+from pydantic import ValidationError
 import pyvista as pv
 
 # Set OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+
 class PlotterConfig(BaseModel):
     """Class to manage the settings of PyVista Plotter"""
+
     background_color: str = "white"
     window_size: tuple[int, int] = (800, 600)
     lighting: str = "default"
 
+
 class AIPlotter(pv.Plotter):
     """PyVista Plotter class that allows AI-based configuration"""
+
     def __init__(self, config: PlotterConfig):
         super().__init__()
         self.background_color = config.background_color
@@ -26,8 +34,8 @@ class AIPlotter(pv.Plotter):
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are an AI assistant that translates user input into PyVista Plotter settings."},
-                {"role": "user", "content": f"Adjust the PyVista plot settings based on this prompt: {prompt}"}
-            ]
+                {"role": "user", "content": f"Adjust the PyVista plot settings based on this prompt: {prompt}"},
+            ],
         )
 
         ai_suggestion = response["choices"][0]["message"]["content"]
@@ -42,6 +50,7 @@ class AIPlotter(pv.Plotter):
             self.lighting = config.lighting
         except (ValidationError, SyntaxError) as e:
             print(f"Invalid AI suggestion: {e}")
+
 
 # Initialize default settings
 config = PlotterConfig()
