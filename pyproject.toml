@@ -3,6 +3,7 @@ build-backend = 'setuptools.build_meta'
 requires = [
   'pydantic-ai[all]<0.0.37',
   'pyvista[all]<0.44.2',
+  'setuptools<69.0.4',
 ]
 
 [project]
@@ -10,8 +11,7 @@ dependencies = [
   'pydantic-ai[all]<0.0.37',
   'pyvista[all]<0.44.2',
 ]
-
-[name]
+dynamic = ["readme", "version"]
 name = "pyvista-ai"
 
 [tool.ruff]
@@ -35,3 +35,7 @@ required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
+
+[tool.setuptools.dynamic]
+readme = { file = "README.md", content-type = "text/markdown" }
+version = { attr = 'pyvista_ai.__version__' }
