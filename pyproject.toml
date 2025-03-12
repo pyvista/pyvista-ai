@@ -10,7 +10,6 @@ dependencies = [
   'pydantic-ai[all]<0.0.37',
   'pyvista[all]<0.44.2',
 ]
-name = "pyvista-ai"
 
 [name]
 name = "pyvista-ai"
