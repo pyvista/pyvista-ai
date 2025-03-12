@@ -12,6 +12,9 @@ dependencies = [
 ]
 name = "pyvista-ai"
 
+[name]
+name = "pyvista-ai"
+
 [tool.ruff]
 line-length = 150
 
