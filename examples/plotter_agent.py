@@ -8,11 +8,17 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass
 
+# +
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic_ai import Agent
 from pydantic_ai import RunContext
 import pyvista as pv
+
+pv.set_jupyter_backend("static")
+
+
+# -
 
 
 @dataclass
@@ -42,32 +48,27 @@ class PlotterAgent(Agent[PlotterDependencies, PlotterResult]):
             system_prompt=self.default_system_prompt(),
         )
         self.system_prompt(self.describe_plotter)
-        self.tool(self.create_plotter)
+        self.plotter = pv.Plotter()
 
     @staticmethod
     def default_system_prompt() -> str:
         """Return the default system prompt for the agent"""
-        return "You are an AI agent managing PyVista Plotter configurations for scientific visualization."
+        return "You are an AI agent managing PyVista Plotter configurations."
 
     @staticmethod
     async def describe_plotter(ctx: RunContext[PlotterDependencies]) -> str:
         """Describe the plotter configuration in the system prompt"""
         return f"The plotter has a background color of {ctx.deps.background_color} and a window size of {ctx.deps.window_size}."
 
-    @staticmethod
-    async def create_plotter(ctx: RunContext[PlotterDependencies]) -> PlotterResult:
-        """Create a PyVista Plotter instance with specified configurations"""
-        try:
-            plotter = pv.Plotter()
-            plotter.background_color = ctx.deps.background_color
-            plotter.window_size = ctx.deps.window_size
-            message = "Plotter configured successfully."
-            success = True
-        except Exception as e:  # noqa: BLE001
-            message = f"Failed to configure Plotter: {e!s}"
-            success = False
+    @property
+    def plotter(self) -> pv.Plotter:
+        """Get the PyVista Plotter instance"""
+        return self._plotter
 
-        return PlotterResult(message=message, success=success)
+    @plotter.setter
+    def plotter(self, value: pv.Plotter) -> None:
+        """Set the PyVista Plotter instance"""
+        self._plotter = value
 
 
 # Create an instance of PlotterAgent
@@ -77,9 +78,27 @@ plotter_agent = PlotterAgent(model="google-gla:gemini-1.5-flash")
 async def main() -> None:
     """Test the PlotterAgent with different configurations"""
     deps = PlotterDependencies(background_color="black", window_size=(1024, 768))
-    result = await plotter_agent.run("Configure PyVista Plotter", deps=deps)
+    result = await plotter_agent.run("Set Plotter background_color to red", deps=deps)
     print(result.data)
+    plotter_agent.plotter.show()
 
 
-# Run the main function if needed
-asyncio.run(main())  # Uncomment this line to run in an async environment
+task = asyncio.create_task(main())
+await task  # noqa: F704, PLE1142
+
+plotter_agent.background_color  # noqa: B018
+
+# +
+# plotter_agent?
+# -
+
+plotter_agent.describe_plotter()
+
+# +
+from pydantic_ai import Agent  # noqa: E402
+
+agent = Agent(model="google-gla:gemini-1.5-flash")
+
+result_sync = agent.run_sync("What is the capital of Italy?")
+print(result_sync.data)
+# -
