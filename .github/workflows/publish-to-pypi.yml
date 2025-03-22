@@ -1,4 +1,4 @@
-name: Build and publish Python 錐 distributions 逃 to PyPI and TestPyPI
+name: Build and publish Python distributions to PyPI and TestPyPI
 on:
   release:
     types: [published]
@@ -39,7 +39,7 @@ jobs:
           path: dist/
   publish:
     name: >-
-      Publish Python 錐 distribution 逃 to PyPI
+      Publish Python distribution to PyPI
     if: github.repository_owner == 'pyvista'
     needs:
       - build
