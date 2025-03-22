@@ -43,6 +43,7 @@ class PlotterAgent(Agent[PlotterDependencies, PlotterResult]):
         )
         self.system_prompt(self.describe_plotter)
         self.tool(self.create_plotter)
+        self.plotter = pv.Plotter()
 
     @staticmethod
     def default_system_prompt() -> str:
@@ -69,6 +70,16 @@ class PlotterAgent(Agent[PlotterDependencies, PlotterResult]):
 
         return PlotterResult(message=message, success=success)
 
+    @property
+    def plotter(self) -> pv.Plotter:
+        """Get the PyVista Plotter instance"""
+        return self._plotter
+
+    @plotter.setter
+    def plotter(self, value: pv.Plotter) -> None:
+        """Set the PyVista Plotter instance"""
+        self._plotter = value
+
 
 # Create an instance of PlotterAgent
 plotter_agent = PlotterAgent(model="google-gla:gemini-1.5-flash")
@@ -79,6 +90,7 @@ async def main() -> None:
     deps = PlotterDependencies(background_color="black", window_size=(1024, 768))
     result = await plotter_agent.run("Configure PyVista Plotter", deps=deps)
     print(result.data)
+    plotter_agent.plotter.show()
 
 
 # Run the main function if needed
