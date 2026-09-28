@@ -26,9 +26,11 @@ from pyvista_ai import PlotterAgent
 
 agent = PlotterAgent(model="gemini:pro")
 
+
 async def main() -> None:
     plotter = await agent.run("Enhance realistic shading and display in widescreen mode")
     return plotter.show()
+
 
 asyncio.run(main())
 ```
